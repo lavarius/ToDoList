@@ -24,10 +24,14 @@ class ToDoTVC : UITableViewController {
         //toDos = createToDos() // removed, since we only want the user to make the list
         //print(toDos.count)
         
-        // run the function to fetch core data
+        // run the function to fetch core data, only runs once
         getToDos()
     }
     
+    // when the view controller reappears anytime, it calls the getToDos() function
+    override func viewWillAppear(_ animated: Bool) {
+        getToDos()
+    }
     // Fetch from Core Data
     func getToDos() {
         // Access Core Data, get context
@@ -49,6 +53,7 @@ class ToDoTVC : UITableViewController {
             }
         }
     }
+    /*
     // Create To do Items (Tester)
     func createToDos() -> [ToDo] {
         // why is this a constant? Constant objects, things inside it, are variables. That's why we can let eggs be a constant
@@ -64,6 +69,7 @@ class ToDoTVC : UITableViewController {
         
         return [eggs, dog, cheese]
     }
+    */
     
     // Number of Rows - However many is in the ToDos Array
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -85,7 +91,7 @@ class ToDoTVC : UITableViewController {
             if toDo.importance {
                 cell.textLabel?.text = "❗️" + name
             } else {
-                cell.textLabel?.text = name
+                cell.textLabel?.text = toDo.item
             }
         }
         
@@ -113,7 +119,7 @@ class ToDoTVC : UITableViewController {
         // Segue to the Complete ToDo List VC
         if let completeVC = segue.destination as? CompletePageVC {
             // communicate with the copmletePageVC by checking destination
-            if let toDo = sender as? ToDo {
+            if let toDo = sender as? ToDoCoreData {
                 // send in an optional and check
                 completeVC.selectedToDo = toDo
                 // set previousVC equal to self

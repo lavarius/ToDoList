@@ -14,7 +14,8 @@ class CompletePageVC: UIViewController {
     // Add To Do TVC
     var previousVC = ToDoTVC()
     // variable that holds selected To Do Item, a generic ToDo() object
-    var selectedToDo = ToDo()
+    //var selectedToDo = ToDo() // going to change type to coreData
+    var selectedToDo : ToDoCoreData? // = nil
     
     // Add Outlet
     @IBOutlet weak var ToDoItem: UILabel!
@@ -24,10 +25,28 @@ class CompletePageVC: UIViewController {
         super.viewDidLoad()
 
         // Display correct information inside title label
-        ToDoItem.text = selectedToDo.item
+        ToDoItem.text = selectedToDo?.item
     }
     // Action to take when button is tapped
     @IBAction func completeButton(_ sender: Any) {
+        
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
+            
+            if let theToDo = selectedToDo {
+                context.delete(theToDo) // delete something from core data
+                
+                //pop back to menu
+                navigationController?.popViewController(animated: true)
+                
+                
+            }
+            
+        }
+            
+        
+        
+        // with coreData, we don't need the following:
+        /*
         //create index var, and reset it each time button is tapped
         var index = 0
         // for loop to check which index we are going to remove
@@ -48,6 +67,7 @@ class CompletePageVC: UIViewController {
             // increase index each time we go through the loop
             index += 1
         }
+        */
     }
     /*
      
