@@ -24,6 +24,32 @@ class AddToDoVC : UIViewController {
         // Do any additional setup after loading the view.
     }
     @IBAction func addTapped(_ sender: Any) {
+        // Core Data Stuff added
+        // need access to the appledelegate class, a specific one, get access to persistent container
+        // we want this viewContext to work with our specific core data
+        // First get the context from the appdelegate, allows us to interact with core data, bridge for core data and appdata can talk 
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
+            // Create a ToDoCoreData object and store it in core data itself
+            // have to define an entity and managedObjectContext
+            // Context? Representation of the database from core data.
+            // This will make a new object in core data
+            let toDo = ToDoCoreData(entity: ToDoCoreData.entity(), insertInto: context)
+            
+            if let titleTextFieldUnwrapped = titleTextField.text {
+                toDo.item = titleTextFieldUnwrapped
+                
+                // Easy to work with
+                toDo.importance = importanceSwitch.isOn
+                
+                // no need to append or repopulate since the core data should take care of this
+            }
+            // when you add something to core data, you want to save to core data, try?, it may or may not go the way we want it to
+            try? context.save()
+            
+            // pop user back to main screen, have pushed into navigation stack, now want to pop back into the navigation stack
+            navigationController?.popViewController(animated: true)
+        }
+        /* Removing this preCore Data Code
         let toDo = ToDo()
         // an Optional!
         //toDo.item = titleTextField.text!
@@ -45,6 +71,7 @@ class AddToDoVC : UIViewController {
             // pop user back to main screen, have pushed into navigation stack, now want to pop back into the navigation stack
             navigationController?.popViewController(animated: true)
         }
+        */
         
     }
     
